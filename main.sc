@@ -1,3 +1,5 @@
+import .raydEngine.use
+import HID
 let vk = (import .volk)
 
 inline vkcheck (result)
@@ -80,5 +82,9 @@ inline vkcheck (result)
 
 # ================================================================================
 
+HID.init (HID.WindowOptions (visible? = true)) (HID.GfxAPI.WebGPU)
 vkcheck
     vk.volkInitialize;
+
+while (not (HID.window.received-quit-event?))
+    HID.window.poll-events;
