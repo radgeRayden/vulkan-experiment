@@ -16,16 +16,16 @@ inline vkcheck (result)
         print "A return array was too small for the result"
     case vk.Result.VK_SUBOPTIMAL_KHR
         print "A swapchain no longer matches the surface properties exactly, but can still be used to present to the surface successfully."
-    case vk.Result.VK_THREAD_IDLE_KHR
-        print "A deferred operation is not complete but there is currently no work for this thread to do at the time of this call."
-    case vk.Result.VK_THREAD_DONE_KHR
-        print "A deferred operation is not complete but there is no work remaining to assign to additional threads."
-    case vk.Result.VK_OPERATION_DEFERRED_KHR
-        print "A deferred operation was requested and at least some of the work was deferred."
-    case vk.Result.VK_OPERATION_NOT_DEFERRED_KHR
-        print "A deferred operation was requested and no operations were deferred."
-    case vk.Result.VK_PIPELINE_COMPILE_REQUIRED_EXT
-        print "A requested pipeline creation would have required compilation, but the application requested compilation to not be performed."
+    # case vk.Result.VK_THREAD_IDLE_KHR
+    #     print "A deferred operation is not complete but there is currently no work for this thread to do at the time of this call."
+    # case vk.Result.VK_THREAD_DONE_KHR
+    #     print "A deferred operation is not complete but there is no work remaining to assign to additional threads."
+    # case vk.Result.VK_OPERATION_DEFERRED_KHR
+    #     print "A deferred operation was requested and at least some of the work was deferred."
+    # case vk.Result.VK_OPERATION_NOT_DEFERRED_KHR
+    #     print "A deferred operation was requested and no operations were deferred."
+    # case vk.Result.VK_PIPELINE_COMPILE_REQUIRED_EXT
+    #     print "A requested pipeline creation would have required compilation, but the application requested compilation to not be performed."
     # Error codes
     case vk.Result.VK_ERROR_OUT_OF_HOST_MEMORY
         assert false "A host memory allocation has failed."
@@ -67,8 +67,8 @@ inline vkcheck (result)
         assert false "An external handle is not a valid handle of the specified type."
     case vk.Result.VK_ERROR_FRAGMENTATION
         assert false "A descriptor pool creation has failed due to fragmentation."
-    case vk.Result.VK_ERROR_INVALID_DEVICE_ADDRESS_EXT
-        assert false "A buffer creation failed because the requested address is not available."
+    # case vk.Result.VK_ERROR_INVALID_DEVICE_ADDRESS_EXT
+    #     assert false "A buffer creation failed because the requested address is not available."
     case vk.Result.VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS
         assert false "A buffer creation or memory allocation failed because the requested address is not available. A shader group handle assignment failed because the requested shader group handle information is no longer valid."
     case vk.Result.VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
