@@ -90,5 +90,26 @@ HID.init (HID.WindowOptions (visible? = true)) (HID.GfxAPI.WebGPU)
 vkcheck
     vk.volkInitialize;
 
+local extensions = (HID.window.required-vulkan-extensions)
+'append extensions vk.VK_EXT_DEBUG_REPORT_EXTENSION_NAME
+
+local instance : vk.Instance
+vkcheck
+    vk.CreateInstance
+        &local vk.InstanceCreateInfo
+            sType = vk.StructureType.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
+            # TODO: fill in with API version - using a find-best-vulkan-version function
+            pApplicationInfo =
+                &local vk.ApplicationInfo
+                    sType = vk.StructureType.VK_STRUCTURE_TYPE_APPLICATION_INFO
+                    pApplicationName = "vulkan experiment"
+                    apiVersion = (vk.VK_API_VERSION_1_2 as u32)
+            ppEnabledExtensionNames = extensions
+            enabledExtensionCount = ((countof extensions) as u32)
+        null # alloc cbs
+        &instance
+
+vk.volkLoadInstance instance
+
 while (not (HID.window.received-quit-event?))
     HID.window.poll-events;
