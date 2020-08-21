@@ -1,6 +1,10 @@
+load-library "./libvolk.so"
+run-stage;
+
+using import radlib.core-extensions
 import .raydEngine.use
 import HID
-let vk = (import .volk)
+let vk = (import foreign.volk)
 
 inline vkcheck (result)
     switch result
