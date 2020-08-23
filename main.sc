@@ -113,3 +113,5 @@ vk.volkLoadInstance instance
 
 while (not (HID.window.received-quit-event?))
     HID.window.poll-events;
+
+vk.DestroyInstance instance null
