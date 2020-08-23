@@ -90,8 +90,45 @@ HID.init (HID.WindowOptions (visible? = true)) (HID.GfxAPI.Vulkan)
 vkcheck
     vk.volkInitialize;
 
+# NOTE: doesn't check for the existence of the extensions. Could be problematic,
+# however the extensions currently selected are pretty safe to add.
 local extensions = (HID.window.required-vulkan-extensions)
 'append extensions vk.VK_EXT_DEBUG_REPORT_EXTENSION_NAME
+'append extensions vk.VK_EXT_DEBUG_UTILS_EXTENSION_NAME
+
+# NOTE: see extensions note.
+local layers : rawstring = "VK_LAYER_KHRONOS_validation"
+
+""""From the vulkan specification:
+    • flags specifies the VkDebugReportFlagBitsEXT that triggered
+    this callback.
+    • objectType is a VkDebugReportObjectTypeEXT value specifying
+    the type of object being used or created at the time the event
+    was triggered.
+    • object is the object where the issue was detected. If objectType
+    is VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, object is undefined.
+    • location is a component (layer, driver, loader) defined value
+    that specifies the location of the trigger. This is an optional
+    value.
+    • messageCode is a layer-defined value indicating what test
+    triggered this callback.
+    • pLayerPrefix is a null-terminated string that is an abbreviation
+    of the name of the component
+    making the callback. pLayerPrefix is only valid for the duration
+    of the callback.
+    • pMessage is a null-terminated string detailing the trigger
+    conditions. pMessage is only valid for the
+    duration of the callback.
+    • pUserData is the user data given when the VkDebugReportCallbackEXT
+    was created.
+    The callback must not call vkDestroyDebugReportCallbackEXT.
+    The callback returns a VkBool32, which is interpreted in a
+    layer-specified manner. The application should always return
+    VK_FALSE. The VK_TRUE value is reserved for use in layer development.
+fn vk-debug-callback (flags object-type object location
+                      message-code layer-prefix message userdata)
+    print "Vulkan - " (string message)
+    vk.VK_FALSE as u32
 
 local instance : vk.Instance
 vkcheck
@@ -104,6 +141,20 @@ vkcheck
                     sType = vk.StructureType.VK_STRUCTURE_TYPE_APPLICATION_INFO
                     pApplicationName = "vulkan experiment"
                     apiVersion = (vk.VK_API_VERSION_1_2 as u32)
+                    pNext =
+                        &local vk.DebugReportCallbackCreateInfoEXT
+                            sType =
+                                vk.StructureType.VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
+                            flags =
+                                |
+                                    # vk.VK_DEBUG_REPORT_INFORMATION_BIT_EXT
+                                    vk.DebugReportFlagBitsEXT.VK_DEBUG_REPORT_WARNING_BIT_EXT
+                                    vk.DebugReportFlagBitsEXT.VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT
+                                    vk.DebugReportFlagBitsEXT.VK_DEBUG_REPORT_ERROR_BIT_EXT
+                                    # vk.VK_DEBUG_REPORT_DEBUG_BIT_EXT
+                            pfnCallback = vk-debug-callback
+            ppEnabledLayerNames = &layers
+            enabledLayerCount = 1
             ppEnabledExtensionNames = extensions
             enabledExtensionCount = ((countof extensions) as u32)
         null # alloc cbs
