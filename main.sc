@@ -86,7 +86,7 @@ inline vkcheck (result)
 
 # ================================================================================
 
-HID.init (HID.WindowOptions (visible? = true)) (HID.GfxAPI.WebGPU)
+HID.init (HID.WindowOptions (visible? = true)) (HID.GfxAPI.Vulkan)
 vkcheck
     vk.volkInitialize;
 
